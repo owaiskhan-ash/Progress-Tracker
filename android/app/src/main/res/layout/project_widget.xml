@@ -42,21 +42,6 @@
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/widget_milestone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:shadowColor="#CC000000"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="3"
-            android:text=""
-            android:textColor="#D8D8D0"
-            android:textSize="11sp" />
-
-        <TextView
             android:id="@+id/widget_percent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

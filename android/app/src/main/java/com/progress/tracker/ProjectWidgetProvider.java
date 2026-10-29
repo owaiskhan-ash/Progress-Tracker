@@ -13,7 +13,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import org.json.JSONArray;
@@ -55,16 +54,13 @@ public class ProjectWidgetProvider extends AppWidgetProvider {
 
         if (project == null) {
             views.setTextViewText(R.id.widget_project_name, "Choose a project");
-            views.setTextViewText(R.id.widget_milestone, "Tap to configure this widget");
             views.setTextViewText(R.id.widget_percent, "0% COMPLETE");
             views.setImageViewBitmap(R.id.widget_ring, progressBitmap(0));
             views.setOnClickPendingIntent(R.id.widget_root, configurationIntent(context, widgetId));
         } else {
             String name = project.optString("name", "Project");
             int progress = projectProgress(project.optJSONArray("milestones"));
-            String milestone = latestMilestone(project.optJSONArray("milestones"));
             views.setTextViewText(R.id.widget_project_name, name);
-            views.setTextViewText(R.id.widget_milestone, milestone);
             views.setTextViewText(R.id.widget_percent, progress + "% COMPLETE");
             views.setImageViewBitmap(R.id.widget_ring, progressBitmap(progress));
             views.setOnClickPendingIntent(R.id.widget_root, appIntent(context));
@@ -93,20 +89,6 @@ public class ProjectWidgetProvider extends AppWidgetProvider {
             if (milestone != null) result = Math.max(result, milestone.optInt("percent", 0));
         }
         return Math.max(0, Math.min(result, 100));
-    }
-
-    private static String latestMilestone(JSONArray milestones) {
-        if (milestones == null || milestones.length() == 0) return "";
-        JSONObject latest = null;
-        int highest = -1;
-        for (int i = 0; i < milestones.length(); i++) {
-            JSONObject milestone = milestones.optJSONObject(i);
-            if (milestone != null && milestone.optInt("percent", 0) >= highest) {
-                highest = milestone.optInt("percent", 0);
-                latest = milestone;
-            }
-        }
-        return latest == null ? "" : latest.optString("note", "");
     }
 
     private static Bitmap progressBitmap(int progress) {
