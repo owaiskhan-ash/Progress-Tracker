@@ -5,6 +5,9 @@ node_modules/
 # Android build output and local SDK config
 android/.gradle/
 android/local.properties
+android/keystore.properties
+android/**/*.jks
+android/**/*.keystore
 android/**/build/
 android/**/*.apk
 android/**/*.aab

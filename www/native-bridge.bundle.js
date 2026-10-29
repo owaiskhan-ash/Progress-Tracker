@@ -698,9 +698,12 @@
   });
 
   // www/native-bridge.js
+  var ProjectTracker = registerPlugin("ProjectTracker");
+  var isNative = () => Capacitor.isNativePlatform();
   window.__projectNotifications = {
-    isNative: () => Capacitor.isNativePlatform(),
-    plugin: LocalNotifications
+    isNative,
+    plugin: LocalNotifications,
+    syncWidgetData: (projects) => isNative() ? ProjectTracker.syncWidgetData({ projects }) : Promise.resolve()
   };
 })();
 /*! Bundled license information:

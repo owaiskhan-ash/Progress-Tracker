@@ -24,6 +24,25 @@
 
         </activity>
 
+        <activity
+            android:name=".WidgetConfigureActivity"
+            android:exported="true"
+            android:label="@string/widget_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <receiver
+            android:name=".ProjectWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_name"
+            android:permission="android.permission.BIND_APPWIDGET">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/project_widget_info" />
+        </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

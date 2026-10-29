@@ -2,7 +2,7 @@ const KEY='progress-tracker-v1';
 const app=document.getElementById('app');
 let db=load(), screen='home', activeId=null, modal=null, toastTimer;
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{projects:[],undo:{},history:{}}}catch{return{projects:[],undo:{},history:{}}}}
-function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));const bridge=window.__projectNotifications;if(bridge?.isNative?.())bridge.syncWidgetData(JSON.stringify(db.projects)).catch(error=>console.warn('Widget refresh failed',error))}
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function project(){return db.projects.find(p=>p.id===activeId)}
 function progress(p){return p?.milestones?.reduce((m,x)=>Math.max(m,Number(x.percent)||0),0)||0}
@@ -57,4 +57,5 @@ function saveDeadline(){project().deadline=document.getElementById('deadlineInpu
 function clearDeadline(){project().deadline='';save();modal=null;render();notify('Deadline cleared')}
 function confirmDelete(){const p=project();for(const m of p.milestones)cancelReminder(m);db.projects=db.projects.filter(x=>x.id!==activeId);delete db.undo[activeId];delete db.history[activeId];save();activeId=null;modal=null;screen='home';render();notify('Project deleted')}
 render();
+if(window.__projectNotifications?.isNative?.())window.__projectNotifications.syncWidgetData(JSON.stringify(db.projects)).catch(error=>console.warn('Widget refresh failed',error));
 if('serviceWorker' in navigator && location.protocol!=='file:') navigator.serviceWorker.register('./sw.js').catch(()=>{});
