@@ -1,0 +1,11 @@
+{
+  "appId": "com.progress.tracker",
+  "appName": "Project Tracker",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}

@@ -1,0 +1,107 @@
+name: Build Android release APK
+
+on:
+  push:
+    branches: [arena/46480fcb-progress-tracker]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  android-apk:
+    name: Build APK
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      RELEASE_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install Android platform and build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          SDKMANAGER="$(find "$SDK_ROOT" /opt/android-sdk /usr/local/android-sdk -type f -name sdkmanager -print -quit 2>/dev/null || true)"
+          if [[ -z "$SDKMANAGER" ]]; then
+            echo "::error::Android SDK manager not found. ANDROID_HOME=$SDK_ROOT"
+            ls -la "$SDK_ROOT" 2>&1 || true
+            exit 1
+          fi
+          SDK_ROOT="$(dirname "$(dirname "$(dirname "$(dirname "$SDKMANAGER")")")")"
+          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
+          set +o pipefail
+          yes | "$SDKMANAGER" --licenses >/dev/null
+          set -o pipefail
+          "$SDKMANAGER" --install "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Install dependencies and sync Capacitor
+        run: |
+          npm ci
+          npm run android:sync
+
+      - name: Prepare private release key
+        if: env.RELEASE_KEYSTORE_BASE64 != '' && env.RELEASE_KEYSTORE_PASSWORD != '' && env.RELEASE_KEY_ALIAS != '' && env.RELEASE_KEY_PASSWORD != ''
+        run: |
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > android/release-upload.jks
+          echo "ANDROID_KEYSTORE_FILE=$GITHUB_WORKSPACE/android/release-upload.jks" >> "$GITHUB_ENV"
+          echo "ANDROID_KEYSTORE_PASSWORD=$RELEASE_KEYSTORE_PASSWORD" >> "$GITHUB_ENV"
+          echo "ANDROID_KEY_ALIAS=$RELEASE_KEY_ALIAS" >> "$GITHUB_ENV"
+          echo "ANDROID_KEY_PASSWORD=$RELEASE_KEY_PASSWORD" >> "$GITHUB_ENV"
+
+      - name: Build APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd android
+          chmod +x gradlew
+          if [[ -n "$RELEASE_KEYSTORE_BASE64" && -n "$RELEASE_KEYSTORE_PASSWORD" && -n "$RELEASE_KEY_ALIAS" && -n "$RELEASE_KEY_PASSWORD" ]]; then
+            ./gradlew assembleRelease
+            mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/Project-Tracker.apk
+            echo "APK_VARIANT=release-signed" >> "$GITHUB_ENV"
+          else
+            ./gradlew assembleDebug
+            mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/Project-Tracker.apk
+            echo "APK_VARIANT=debug-signed" >> "$GITHUB_ENV"
+          fi
+
+      - name: Upload APK build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Project-Tracker-apk
+          path: android/app/build/outputs/apk/**/Project-Tracker.apk
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Publish or update GitHub release
+        if: (github.event_name == 'push' && contains(github.event.head_commit.message, '[release]')) || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          APK_PATH="$(find android/app/build/outputs/apk -name Project-Tracker.apk -print -quit)"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$APK_PATH" --clobber
+          else
+            gh release create "$TAG" "$APK_PATH" --target "$GITHUB_SHA" --title "Project Tracker $TAG" --notes-file .github/release-notes.md
+          fi
