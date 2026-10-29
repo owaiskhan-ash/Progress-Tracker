@@ -62,4 +62,5 @@ function clearDeadline(){project().deadline='';save();modal=null;render();notify
 function confirmDelete(){const p=project();for(const m of p.milestones)cancelReminder(m);db.projects=db.projects.filter(x=>x.id!==activeId);delete db.undo[activeId];delete db.history[activeId];save();activeId=null;modal=null;screen='home';render();notify('Project deleted')}
 render();
 if(window.__projectNotifications?.isNative?.())window.__projectNotifications.syncWidgetData(JSON.stringify(db.projects)).catch(error=>console.warn('Widget refresh failed',error));
-if('serviceWorker' in navigator && location.protocol!=='file:') navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if(window.__TRACKER_DEV__&&'serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(registrations=>registrations.forEach(registration=>registration.unregister())).catch(()=>{});if('caches' in window)caches.keys().then(keys=>keys.filter(key=>key.startsWith('project-tracker-shell-')).forEach(key=>caches.delete(key))).catch(()=>{})}
+if('serviceWorker' in navigator&&!window.__TRACKER_DEV__&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});

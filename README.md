@@ -4,11 +4,13 @@ A minimal Android project tracker with a high-contrast acid-lime and ink interfa
 
 ## Open the preview
 
-The workspace preview runs at port 4173:
+The Vite preview runs at port 5173 with live reload: edits to the screen JavaScript, styles, and HTML appear automatically in the viewport without manual refresh. Start it with:
 
 ```sh
 npm run start
 ```
+
+The preview disables the offline service worker to keep its live updates immediate. The installed app still uses the service worker for its offline shell.
 
 ## Build an Android APK
 
