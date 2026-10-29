@@ -12,3 +12,5 @@ android/**/*.keystore
 android/**/build/
 android/**/*.apk
 android/**/*.aab
+
+.venv/
