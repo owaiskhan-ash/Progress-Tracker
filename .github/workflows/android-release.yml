@@ -2,7 +2,7 @@ name: Build Android release APK
 
 on:
   push:
-    branches: [arena/46480fcb-progress-tracker]
+    branches: ['arena/**']
   workflow_dispatch:
 
 permissions:
