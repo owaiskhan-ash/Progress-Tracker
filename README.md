@@ -23,7 +23,7 @@ cd android
 ./gradlew assembleDebug
 ```
 
-The local debug APK is generated at `android/app/build/outputs/apk/debug/app-debug.apk`. GitHub Actions also builds and verifies APKs on the hosted Android toolchain; tagged release commits publish the APK to GitHub.
+The local debug APK is generated at `android/app/build/outputs/apk/debug/app-debug.apk`. GitHub Actions builds and verifies APKs on the hosted Android toolchain; commits marked `[release]` publish the APK to GitHub. Android cloud backup and device-to-device transfer are excluded so project data stays on the device.
 
 ## Features
 
