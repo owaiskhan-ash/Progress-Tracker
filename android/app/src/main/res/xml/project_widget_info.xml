@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.progress.tracker.WidgetConfigureActivity"
     android:description="@string/widget_description"
     android:initialKeyguardLayout="@layout/project_widget"
     android:initialLayout="@layout/project_widget"
