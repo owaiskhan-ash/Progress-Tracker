@@ -44,7 +44,9 @@ jobs:
           SDK_ROOT="$(dirname "$(dirname "$(dirname "$(dirname "$SDKMANAGER")")")")"
           echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
           echo "Using $SDKMANAGER from $SDK_ROOT"
+          set +o pipefail
           yes | "$SDKMANAGER" --licenses >/dev/null
+          set -o pipefail
           "$SDKMANAGER" --install "platforms;android-35" "build-tools;35.0.0" "platform-tools"
 
       - name: Set up Gradle
