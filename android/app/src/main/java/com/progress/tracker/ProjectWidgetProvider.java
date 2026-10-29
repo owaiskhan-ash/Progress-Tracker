@@ -56,7 +56,7 @@ public class ProjectWidgetProvider extends AppWidgetProvider {
         if (project == null) {
             views.setTextViewText(R.id.widget_project_name, "Choose a project");
             views.setTextViewText(R.id.widget_milestone, "Tap to configure this widget");
-            views.setTextViewText(R.id.widget_percent, "PROJECT TRACKER");
+            views.setTextViewText(R.id.widget_percent, "0% COMPLETE");
             views.setImageViewBitmap(R.id.widget_ring, progressBitmap(0));
             views.setOnClickPendingIntent(R.id.widget_root, configurationIntent(context, widgetId));
         } else {
@@ -64,8 +64,8 @@ public class ProjectWidgetProvider extends AppWidgetProvider {
             int progress = projectProgress(project.optJSONArray("milestones"));
             String milestone = latestMilestone(project.optJSONArray("milestones"));
             views.setTextViewText(R.id.widget_project_name, name);
-            views.setTextViewText(R.id.widget_milestone, milestone.isEmpty() ? "Tap + to add a milestone" : milestone);
-            views.setTextViewText(R.id.widget_percent, "PROJECT TRACKER  ·  " + progress + "% COMPLETE");
+            views.setTextViewText(R.id.widget_milestone, milestone);
+            views.setTextViewText(R.id.widget_percent, progress + "% COMPLETE");
             views.setImageViewBitmap(R.id.widget_ring, progressBitmap(progress));
             views.setOnClickPendingIntent(R.id.widget_root, appIntent(context));
         }

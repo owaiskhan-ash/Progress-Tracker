@@ -26,18 +26,6 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:shadowColor="#CC000000"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="3"
-            android:text="PROJECT TRACKER"
-            android:textColor="#D9FF36"
-            android:textSize="9sp"
-            android:letterSpacing="0.12" />
-
-        <TextView
             android:id="@+id/widget_project_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +52,7 @@
             android:shadowDx="0"
             android:shadowDy="1"
             android:shadowRadius="3"
-            android:text="Tap + to add a milestone"
+            android:text=""
             android:textColor="#D8D8D0"
             android:textSize="11sp" />
 
@@ -77,7 +65,7 @@
             android:shadowDx="0"
             android:shadowDy="1"
             android:shadowRadius="3"
-            android:text="PROJECT TRACKER  ·  0% COMPLETE"
+            android:text="0% COMPLETE"
             android:textColor="#D9FF36"
             android:textSize="8sp"
             android:letterSpacing="0.04" />
