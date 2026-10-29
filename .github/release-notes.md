@@ -1,6 +1,6 @@
-## Project Tracker 1.1.2
+## Project Tracker 1.1.3
 
-A cleaner home and project-setup flow: removed the introductory promo copy and active-project counter, aligned the back arrow, and changed project-list cards to black with high-contrast lime details.
+Refined project setup and progress screens, plus a new flat fluorescent graph-line logo used for the app and launcher icon.
 
 Includes the transparent per-project Android launcher widget, local milestone reminders, and three-screen progress tracker. Project data stays on-device.
 
