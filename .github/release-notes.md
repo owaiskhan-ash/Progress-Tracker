@@ -1,14 +1,7 @@
-## Project Tracker 1.1.0
+## Project Tracker 1.1.1
 
-A minimal project tracker with an acid-lime interface and a transparent Android launcher widget.
+Small UI refinement to Project Tracker 1.1.0: removed the home-screen promotional headline and tagline for a cleaner start screen.
 
-### Included
-- Three-screen flow: project list, project naming, and a project progress ring.
-- Add, edit, and delete milestone percentages and notes; ring markers and progress recalculate from the milestone list.
-- Rename or delete projects, add an optional deadline, undo the last progress change, and review history.
-- Transparent Android home-screen widgets. Configure each instance with its own project; widgets refresh when project data changes.
-- Local Android milestone reminders with notification permission support and reboot restoration. Android may delay delivery to conserve battery; reminders are not an alarm-clock replacement.
-- Project data stored locally on the device.
+Includes the transparent per-project Android launcher widget, local milestone reminders, and the three-screen progress tracker. Project data stays on-device.
 
-### Install
-Download `Project-Tracker.apk`, transfer it to an Android device, and allow installation from that source when prompted. If no private signing key is configured in the repository Actions secrets, this release is a debug-signed APK. A private-key-signed build can be enabled by following the signing instructions in the README and adding the four Android signing secrets.
+Download `Project-Tracker.apk` and install it on Android. If your release signing secrets are configured in GitHub Actions, this will be signed with your private release key; otherwise CI produces a debug-signed APK. Android may delay reminder delivery to conserve battery. The launcher widget is transparent and each instance is configured independently.
