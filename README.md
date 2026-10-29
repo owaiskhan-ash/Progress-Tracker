@@ -28,7 +28,7 @@ The local debug APK is generated at `android/app/build/outputs/apk/debug/app-deb
 ## Features
 
 - Create, rename and delete projects; optionally add or clear a target date.
-- Add, edit and delete milestone percentages and notes. Each milestone is shown as a dot around the ring; progress follows the highest remaining marker.
+- Add, edit and delete milestone percentages and notes. Milestones appear in a vertical list below the target-date stats and as dots around the ring; tap a list row to edit and long-press for Edit / Delete. Progress follows the highest remaining marker.
 - Set and clear milestone reminders. The Android build uses local Android notifications; it asks for notification permission where required, and the Capacitor notification receiver restores scheduled notifications after reboot. Android may delay delivery to conserve battery. These reminders are not a substitute for an alarm clock.
 - Undo the last progress change and review a project’s progress history.
 - Transparent Android home-screen widget. Add multiple instances independently, choose a project for each one, and tap a widget to open its project. Widget data refreshes when project data changes.
